@@ -13,13 +13,12 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0"
-	"aura/web-kernel": "2.*@dev",
+        "php": ">=5.3.0",
+	"aura/dispatcher": "2.*@dev",
+	"aura/router": "2.*@dev",
+	"aura/web": "2.*@dev"
     },
     "autoload": {
-	"files": [
-            "autoload.php"
-        ],
         "psr-4": {
             "Thedigital\\Rest\\": "src/"
         }
