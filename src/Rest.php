@@ -6,7 +6,7 @@
  * Rest Object
  *
  */
-namespace Fli\Rest;
+namespace Thedigital\Rest;
 
 class Rest
 {
