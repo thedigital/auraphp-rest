@@ -6,7 +6,7 @@
  * Rest Controller
  *
  */
-namespace Fli\Rest;
+namespace Thedigital\Rest;
 
 use Aura\Dispatcher\InvokeMethodTrait;
 use Aura\Web\Request;
