@@ -1,0 +1,25 @@
+{
+    "name": "thedigital/auraphp-rest",
+    "description": "Rest Controller",
+    "keywords": [
+        "rest"
+    ],
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Guillaume Ferrand",
+            "email": "guillaume.ferrand@gmail.com",
+            "homepage": "https://github.com/thedigital"
+        }
+    ],
+    "require": {
+        "aura/dispatch": "2.*@dev",
+        "aura/router": "2.*@dev",
+        "aura/web": "2.*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Thedigital\\Rest\\": "src/"
+        }
+    }
+}
