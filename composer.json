@@ -12,7 +12,13 @@
             "homepage": "https://github.com/thedigital"
         }
     ],
+    "autoload": {
+        "files": [
+            "autoload.php"
+        ]
+    },
     "require": {
+        "php": ">=5.3.0"
         "aura/dispatcher": "2.0.*@dev",
         "aura/router": "2.*@dev",
         "aura/web": "2.*@dev"
