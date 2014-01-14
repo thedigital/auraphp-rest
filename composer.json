@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "aura/dispatcher": "2.*@dev",
+        "aura/dispatcher": "2.0.*@dev",
         "aura/router": "2.*@dev",
         "aura/web": "2.*@dev"
     },
