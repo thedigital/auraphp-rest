@@ -1,5 +1,5 @@
-AuraSql Query Proxy
-==================
+Auraphp Rest Controller
+=======================
 
 TODO
 
