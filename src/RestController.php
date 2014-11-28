@@ -5,6 +5,8 @@
  *
  * Rest Controller
  *
+ * version : 2014-11-28
+ *
  */
 namespace Thedigital\Rest;
 
@@ -156,9 +158,9 @@ abstract class RestController
         switch ($this->rest->getMimeContentType()){
             case 'application/json':
                 // JSON format
-                $this->response->content->set(
-                    json_encode($content)
-                );
+                $content = json_encode($content);
+                $this->response->headers->set('Content-Length', strlen($content));
+                $this->response->content->set($content);
                 break;
             default:
                 // default case
@@ -223,5 +225,18 @@ abstract class RestController
         }
         // we send the description back
         $this->sendBack($routes);
+    }
+
+    /**
+     *
+     * Get the information from a PATCH request
+     *
+     * @return parsed data
+     *
+     */
+    final protected function getPHPInputData()
+    {
+        parse_str(file_get_contents("php://input"), $post_vars);
+        return $post_vars;
     }
 }
