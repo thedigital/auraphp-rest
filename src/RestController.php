@@ -83,8 +83,12 @@ abstract class RestController
         $this->params           = $this->request->params;
 
         // detection en fonction du meilleur accept-type ou bien autodetection si extention dans url => exemple : action.json
-        $media = $this->request->accept->media->negotiate($this->rest->getFormats());
-        $this->rest->setMimeContentType($media->available->getValue());
+        //--------------------
+        // old system
+        // $media = $this->request->accept->media->negotiate($this->rest->getFormats());
+        // $this->rest->setMimeContentType($media->available->getValue());
+        //--------------------
+        $this->rest->setMimeContentType('application/json');
 
         // automatic detection of HTTP verb used
         foreach ($this->rest->getVerbs() as $verb) {
