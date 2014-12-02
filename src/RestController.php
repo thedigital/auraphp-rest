@@ -88,7 +88,7 @@ abstract class RestController
         // $media = $this->request->accept->media->negotiate($this->rest->getFormats());
         // $this->rest->setMimeContentType($media->available->getValue());
         //--------------------
-        $this->rest->setMimeContentType('application/xml');
+        $this->rest->setMimeContentType('application/json');
 
         // automatic detection of HTTP verb used
         foreach ($this->rest->getVerbs() as $verb) {
