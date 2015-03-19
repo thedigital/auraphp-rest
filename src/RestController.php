@@ -5,7 +5,7 @@
  *
  * Rest Controller
  *
- * version : 2014-11-28
+ * version : 2015-03-19
  *
  */
 namespace Thedigital\Rest;
@@ -59,6 +59,14 @@ abstract class RestController
      *
      */
     protected $rest;
+
+    /**
+     *
+     * How old can be a request ?
+     *
+     * @var integer
+     */
+    private $RequestTTL = 300; // in seconds
 
     /**
      *
@@ -242,5 +250,106 @@ abstract class RestController
     {
         parse_str(file_get_contents("php://input"), $post_vars);
         return $post_vars;
+    }
+
+
+    /**
+     *
+     * Verify integrity of a request (+ authorization)
+     *
+     *
+     */
+    final public function verifyRequest($keys)
+    {
+
+        $error = true;
+        $error_message = 'Unauthorized';
+
+        $public_key = $this->request->headers->get('x-FLI-Key');
+        $hmac = $this->request->headers->get('x-FLI-Hmac');
+        $date = $this->request->headers->get('x-FLI-Date');
+
+        if ($public_key && $hmac && $this->isValidTimeStamp($date)) {
+            //check if request is too old, no need to continue
+            //args fournis
+            if (abs(time() - $date) > $this->RequestTTL) {
+                $error_message = 'Request too old';
+            } elseif ($date > time()) {
+                $error_message = 'Wrong date';
+            } else {
+                if (isset($keys[$public_key])) {
+                    //on a trouvé le script appelant
+                    $url = $this->request->url->get();
+
+                    //on reconstruit le hmac
+                    $string = strtoupper($this->rest->getVerb())."\n"
+                                .$url."\n"
+                                .$date."\n"
+                                .$keys[$public_key]['private_key'];
+                    $hashed_string = $this->FLIhash($string);
+
+                    if ($hashed_string == $hmac) {
+                        //ok, proceed
+                        $error = false;
+                    } else {
+                        $error_message = 'Authentication failed';
+                    }
+                }
+            }
+        } else {
+            $error_message = 'Missing authentication headers';
+        }
+
+        if ($error) {
+            header('HTTP/1.1 401 Unauthorized', true, 401);
+
+            // send non-cookie headers
+            foreach ($this->response->headers->get() as $label => $value) {
+                header("{$label}: {$value}");
+            }
+
+            // send cookies
+            foreach ($this->response->cookies->get() as $name => $cookie) {
+                setcookie(
+                    $name,
+                    $cookie['value'],
+                    $cookie['expire'],
+                    $cookie['path'],
+                    $cookie['domain'],
+                    $cookie['secure'],
+                    $cookie['httponly']
+                );
+            }
+
+            // send content
+            echo json_encode($error_message);
+            die();
+        }
+    }
+
+    /**
+     *
+     * Verify validity of a timestamp
+     *
+     * @return boolean
+     *
+     */
+    private function isValidTimeStamp($timestamp)
+    {
+        return ((string) (int) $timestamp === $timestamp) 
+            && ($timestamp <= PHP_INT_MAX)
+            && ($timestamp >= ~PHP_INT_MAX);
+    }
+
+    /**
+     *
+     * Hash with SHA256
+     *
+     * @return string
+     *
+     */
+    private function FLIhash($input)
+    {
+        return hash('sha256', utf8_encode($input));
     }
 }
