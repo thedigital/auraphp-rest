@@ -283,6 +283,8 @@ abstract class RestController
             } else {
                 $this->response->header->set('x-FLI-authorized', '0');
             }
+        } else {
+            $this->response->header->set('x-FLI-authorized', '0');
         }
 
 
