@@ -271,6 +271,7 @@ abstract class RestController
 
         // modification pour faire fonctionner les 2 systèmes en parallèle
         // a supprimer une fois tout en prod
+        // 
         if ($public_key && $hmac && $this->isValidTimeStamp($date)) {
             $url = $this->request->url->get();
             $string = strtoupper($this->rest->getVerb())."\n"
