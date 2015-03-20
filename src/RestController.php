@@ -271,16 +271,18 @@ abstract class RestController
 
         // modification pour faire fonctionner les 2 systèmes en parallèle
         // a supprimer une fois tout en prod
-        $url = $this->request->url->get();
-        $string = strtoupper($this->rest->getVerb())."\n"
-                    .$url."\n"
-                    .$date."\n"
-                    .$keys[$public_key]['private_key'];
-        $hashed_string = $this->FLIhash($string);
-        if ($hashed_string == $hmac) {
-            $this->reponse->header->set('x-FLI-authorized', '1');
-        } else {
-            $this->reponse->header->set('x-FLI-authorized', '0');
+        if ($public_key && $hmac && $this->isValidTimeStamp($date)) {
+            $url = $this->request->url->get();
+            $string = strtoupper($this->rest->getVerb())."\n"
+                        .$url."\n"
+                        .$date."\n"
+                        .$keys[$public_key]['private_key'];
+            $hashed_string = $this->FLIhash($string);
+            if ($hashed_string == $hmac) {
+                $this->response->header->set('x-FLI-authorized', '1');
+            } else {
+                $this->response->header->set('x-FLI-authorized', '0');
+            }
         }
 
 
