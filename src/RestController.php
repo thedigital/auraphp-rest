@@ -269,7 +269,22 @@ abstract class RestController
         $hmac = $this->request->headers->get('x-FLI-Hmac');
         $date = $this->request->headers->get('x-FLI-Date');
 
-        if ($public_key && $hmac && $this->isValidTimeStamp($date)) {
+        // modification pour faire fonctionner les 2 systèmes en parallèle
+        // a supprimer une fois tout en prod
+        $url = $this->request->url->get();
+        $string = strtoupper($this->rest->getVerb())."\n"
+                    .$url."\n"
+                    .$date."\n"
+                    .$keys[$public_key]['private_key'];
+        $hashed_string = $this->FLIhash($string);
+        if ($hashed_string == $hmac) {
+            $this->reponse->header->set('x-FLI-authorized', '1');
+        } else {
+            $this->reponse->header->set('x-FLI-authorized', '0');
+        }
+
+
+        /*if ($public_key && $hmac && $this->isValidTimeStamp($date)) {
             //check if request is too old, no need to continue
             //args fournis
             if (abs(time() - $date) > $this->RequestTTL) {
@@ -324,7 +339,7 @@ abstract class RestController
             // send content
             echo json_encode($error_message);
             die();
-        }
+        }*/
     }
 
     /**
