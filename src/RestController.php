@@ -279,12 +279,12 @@ abstract class RestController
                         .$keys[$public_key]['private_key'];
             $hashed_string = $this->FLIhash($string);
             if ($hashed_string == $hmac) {
-                $this->response->header->set('x-FLI-authorized', '1');
+                $this->response->headers->set('x-FLI-authorized', '1');
             } else {
-                $this->response->header->set('x-FLI-authorized', '0');
+                $this->response->headers->set('x-FLI-authorized', '0');
             }
         } else {
-            $this->response->header->set('x-FLI-authorized', '0');
+            $this->response->headers->set('x-FLI-authorized', '0');
         }
 
 
