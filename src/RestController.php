@@ -273,7 +273,8 @@ abstract class RestController
         // a supprimer une fois tout en prod
         // 
         if ($public_key && $hmac && $this->isValidTimeStamp($date) && isset($keys[$public_key]) && isset($keys[$public_key]['private_key'])) {
-            $url = $this->request->url->get();
+            // $url = $this->request->url->get();
+            $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //nouvelle version de calcul de l'url
             $string = strtoupper($this->rest->getVerb())."\n"
                         .$url."\n"
                         .$date."\n"
