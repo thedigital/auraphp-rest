@@ -70,6 +70,14 @@ abstract class RestController
 
     /**
      *
+     * Force authentication ?
+     *
+     * @var boolean
+     */
+    private $forceAuthentication = false;
+
+    /**
+     *
      * Construct
      *
      * @param Request $request Aura.Request object
@@ -269,25 +277,29 @@ abstract class RestController
         $hmac = $this->request->headers->get('x-FLI-Hmac');
         $date = $this->request->headers->get('x-FLI-Date');
 
-        // modification pour faire fonctionner les 2 systèmes en parallèle
-        // a supprimer une fois tout en prod
-        // 
-        if ($public_key && $hmac && $this->isValidTimeStamp($date) && isset($keys[$public_key]) && isset($keys[$public_key]['private_key'])) {
-            // $url = $this->request->url->get();
-            $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //nouvelle version de calcul de l'url
-            $string = strtoupper($this->rest->getVerb())."\n"
-                        .$url."\n"
-                        .$date."\n"
-                        .$keys[$public_key]['private_key'];
-            $hashed_string = $this->FLIhash($string);
-            if ($hashed_string == $hmac) {
-                $this->response->headers->set('x-FLI-authorized', '1');
+        if ($this->forceAuthentication) {
+
+        } else {
+            if ($public_key && $hmac && $this->isValidTimeStamp($date) && isset($keys[$public_key]) && isset($keys[$public_key]['private_key'])) {
+                $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //nouvelle version de calcul de l'url
+                var_dump($url);
+                die();
+                $string = strtoupper($this->rest->getVerb())."\n"
+                            .$url."\n"
+                            .$date."\n"
+                            .$keys[$public_key]['private_key'];
+                $hashed_string = $this->FLIhash($string);
+                if ($hashed_string == $hmac) {
+                    $this->response->headers->set('x-FLI-authorized', '1');
+                } else {
+                    $this->response->headers->set('x-FLI-authorized', '0');
+                }
             } else {
                 $this->response->headers->set('x-FLI-authorized', '0');
             }
-        } else {
-            $this->response->headers->set('x-FLI-authorized', '0');
         }
+
+        
 
 
         /*if ($public_key && $hmac && $this->isValidTimeStamp($date)) {
