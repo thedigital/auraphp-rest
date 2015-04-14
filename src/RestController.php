@@ -287,7 +287,8 @@ abstract class RestController
                 } else {
                     if (isset($keys[$public_key])) {
                         //on a trouvé le script appelant
-                        $url = $this->request->url->get();
+                        // $url = $this->request->url->get();
+                        $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //nouvelle version de calcul de l'url
 
                         //on reconstruit le hmac
                         $string = strtoupper($this->rest->getVerb())."\n"
