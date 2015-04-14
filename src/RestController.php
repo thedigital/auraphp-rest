@@ -283,6 +283,7 @@ abstract class RestController
                 //args fournis
                 if (abs(time() - $date) > $this->RequestTTL) {
                     $error_message = 'Request too old';
+                    $this->response->headers->set('x-FLI-authorized', '0');
                 } else {
                     if (isset($keys[$public_key])) {
                         //on a trouvé le script appelant
@@ -298,13 +299,16 @@ abstract class RestController
                         if ($hashed_string == $hmac) {
                             //ok, proceed
                             $error = false;
+                            $this->response->headers->set('x-FLI-authorized', '1');
                         } else {
                             $error_message = 'Authentication failed';
+                            $this->response->headers->set('x-FLI-authorized', '0');
                         }
                     }
                 }
             } else {
                 $error_message = 'Missing authentication headers';
+                $this->response->headers->set('x-FLI-authorized', '0');
             }
 
             if ($error) {
