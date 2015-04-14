@@ -283,8 +283,6 @@ abstract class RestController
                 //args fournis
                 if (abs(time() - $date) > $this->RequestTTL) {
                     $error_message = 'Request too old';
-                } elseif ($date > time() - $this->RequestTTL) {
-                    $error_message = 'Wrong date';
                 } else {
                     if (isset($keys[$public_key])) {
                         //on a trouvé le script appelant
