@@ -74,7 +74,7 @@ abstract class RestController
      *
      * @var boolean
      */
-    private $forceAuthentication = false;
+    private $forceAuthentication = true;
 
     /**
      *
