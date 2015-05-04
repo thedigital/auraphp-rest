@@ -310,6 +310,14 @@ abstract class RestController
             } else {
                 $error_message = 'Missing authentication headers';
                 $this->response->headers->set('x-FLI-authorized', '0');
+                //envoi de mail d'erreur aux admins
+                mail(
+                    'alertes@flinteractive.fr',
+                    "Erreur d'appel API",
+                    "Erreur lors de l'appel a l'API ".strtolower((new \ReflectionClass($this))->getShortName()).' - '.__toString(strtolower((new \ReflectionClass($this)))),
+                    "MIME-Version: 1.0\r\nContent-type: text/html;\r\nFrom: alertes@flinteractive.fr\r\n",
+                    '-f alertes@flinteractive.fr'
+                );
             }
 
             if ($error) {
@@ -339,6 +347,7 @@ abstract class RestController
             }
 
         } else {
+            $this->response->headers->set('x-FLI-authorized', '0');
             if ($public_key && $hmac && $this->isValidTimeStamp($date) && isset($keys[$public_key]) && isset($keys[$public_key]['private_key'])) {
                 $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //nouvelle version de calcul de l'url
                 $string = strtoupper($this->rest->getVerb())."\n"
@@ -348,11 +357,7 @@ abstract class RestController
                 $hashed_string = $this->FLIhash($string);
                 if ($hashed_string == $hmac) {
                     $this->response->headers->set('x-FLI-authorized', '1');
-                } else {
-                    $this->response->headers->set('x-FLI-authorized', '0');
                 }
-            } else {
-                $this->response->headers->set('x-FLI-authorized', '0');
             }
         }
 
