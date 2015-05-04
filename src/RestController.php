@@ -66,7 +66,7 @@ abstract class RestController
      *
      * @var integer
      */
-    private $RequestTTL = 300; // in seconds
+    private $RequestTTL = 900; // in seconds
 
     /**
      *
