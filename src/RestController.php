@@ -311,10 +311,12 @@ abstract class RestController
                 $error_message = 'Missing authentication headers';
                 $this->response->headers->set('x-FLI-authorized', '0');
                 //envoi de mail d'erreur aux admins
+                $data = print_r($_SERVER, true);
                 mail(
                     'alertes@flinteractive.fr',
                     "Erreur d'appel API",
-                    "Erreur lors de l'appel a l'API ".strtolower((new \ReflectionClass($this))->getNamespaceName()),
+                    "Erreur lors de l'appel a l'API ".strtolower((new \ReflectionClass($this))->getNamespaceName())."\n"
+                    .$data,
                     "MIME-Version: 1.0\r\nContent-type: text/html;\r\nFrom: alertes@flinteractive.fr\r\n",
                     '-f alertes@flinteractive.fr'
                 );
