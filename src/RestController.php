@@ -314,7 +314,7 @@ abstract class RestController
                 mail(
                     'alertes@flinteractive.fr',
                     "Erreur d'appel API",
-                    "Erreur lors de l'appel a l'API ".strtolower((new \ReflectionClass($this))->getShortName()).' - '.strtolower((new \ReflectionClass($this))),
+                    "Erreur lors de l'appel a l'API ".strtolower((new \ReflectionClass($this))->getNamespaceName()),
                     "MIME-Version: 1.0\r\nContent-type: text/html;\r\nFrom: alertes@flinteractive.fr\r\n",
                     '-f alertes@flinteractive.fr'
                 );
