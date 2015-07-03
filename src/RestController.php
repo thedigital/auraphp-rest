@@ -62,6 +62,15 @@ abstract class RestController
 
     /**
      *
+     * The RestRequest object.
+     *
+     * @var stdClass
+     *
+     */
+    protected $restRequest = new stdClass();
+
+    /**
+     *
      * How old can be a request ?
      *
      * @var integer
@@ -98,6 +107,7 @@ abstract class RestController
 
         $this->params           = $this->request->params;
 
+
         // detection en fonction du meilleur accept-type ou bien autodetection si extention dans url => exemple : action.json
         //--------------------
         // old system
@@ -114,6 +124,14 @@ abstract class RestController
             if ($this->request->method->$func()) {
                 // we store the verb
                 $this->rest->setVerb($verb);
+
+                /* analyze php://input and set restRequest if not empty */
+                parse_str(file_get_contents("php://input"), $post_vars);
+                if (count($post_vars) > 0) {
+                    foreach ($post_vars as $data_key => $data_value) {
+                        $this->restRequest->{$data_key} = $data_value; // {$verb}->
+                    }
+                }
 
                 // ce bloc detecte une methode qui n'existe pas mais a cause du invoke method declenche 2 executions : trouver autre chose
                 try {
@@ -259,6 +277,25 @@ abstract class RestController
         parse_str(file_get_contents("php://input"), $post_vars);
         return $post_vars;
     }
+
+
+    /**
+     *
+     * Get the information from a PATCH/PUT/... requests
+     *
+     * @return object
+     *
+     */
+    /*final protected function getInputStream()
+    {
+        parse_str(file_get_contents("php://input"), $post_vars);
+        if (count($post_vars) > 0) {
+            foreach ($post_vars as $data_key => $data_value) {
+                $this->restRequest->{$data} = $data_value;
+            }
+        }
+        return $post_vars;
+    }*/
 
 
     /**
