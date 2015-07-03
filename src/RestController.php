@@ -126,12 +126,12 @@ abstract class RestController
                 $this->rest->setVerb($verb);
 
                 /* analyze php://input and set restRequest if not empty */
-                parse_str(file_get_contents("php://input"), $post_vars);
+                /*parse_str(file_get_contents("php://input"), $post_vars);
                 if (count($post_vars) > 0) {
                     foreach ($post_vars as $data_key => $data_value) {
                         $this->restRequest->{$data_key} = $data_value; // {$verb}->
                     }
-                }
+                }*/
 
                 // ce bloc detecte une methode qui n'existe pas mais a cause du invoke method declenche 2 executions : trouver autre chose
                 try {
