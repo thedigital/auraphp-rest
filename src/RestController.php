@@ -67,7 +67,7 @@ abstract class RestController
      * @var stdClass
      *
      */
-    protected $restRequest = new stdClass();
+    protected $restRequest;
 
     /**
      *
