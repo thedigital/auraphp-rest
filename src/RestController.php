@@ -267,6 +267,38 @@ abstract class RestController
 
     /**
      *
+     * Récupère toutes les routes
+     * 
+     *
+     * @param null
+     *
+     * @return routes
+     *
+     */
+    final public function getListingRoute()
+    {
+        $routes = array();
+
+        // get Router.routes
+        foreach ($this->router->getIterator() as $route) {
+
+            if ($route->routable == 1 && $route->path != '/documentation' ) {
+                $routes[] = array(
+                    'name' => $route->name,
+                    'path' => $route->path,
+                    'tokens' => $route->tokens,
+                    'verb' => $route->method,
+                    'values' => $route->values,
+                    'name' => $route->name,
+                );
+            }
+        }
+        // we send the description back
+        return $routes;
+    }
+
+    /**
+     *
      * Get the information from a PATCH request
      *
      * @return parsed data
