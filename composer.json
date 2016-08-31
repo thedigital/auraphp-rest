@@ -18,9 +18,6 @@
         "aura/web": "2.*@dev"
     },
     "autoload": {
-        "files": ["autoload.php"]
-    }
-    "autoload": {
         "psr-4": {
 	    "Thedigital\\Rest\\": "src/Thedigital/Rest/"
         }
