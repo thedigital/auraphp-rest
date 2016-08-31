@@ -8,6 +8,8 @@
  */
 namespace Thedigital\Rest;
 
+use Aura\Web\Request;
+
 class Rest
 {
     /**
@@ -58,6 +60,16 @@ class Rest
 
     /**
      *
+     * The Request object.
+     *
+     * @var thedigital\auraphp-rest\request
+     *
+     */
+    public $request = null;
+
+
+    /**
+     *
      * Construct
      *
      * @param Request $request Aura.Request object
@@ -69,10 +81,22 @@ class Rest
      * @return null
      *
      */
-    /*public function __construct()
+    public function __construct(Request $auraRequest)
     {
-        ;
-    }*/
+        $verb = strtolower($auraRequest->method->get());
+
+        $this->request = new RestRequest();
+        $this->request->setVerb($verb);
+        $this->verb = $verb; // legacy
+
+        if (in_array($verb, ['post'])) {
+            $this->request->set($auraRequest->post->get());
+        } elseif (in_array($verb, ['get'])) {
+            $this->request->set($auraRequest->query->get());
+        } else {
+            $this->request->set($this->request->getInputStream());
+        }
+    }
 
 
     /**

@@ -1,4 +1,0 @@
-Auraphp Rest Controller
-=======================
-
-TODO
