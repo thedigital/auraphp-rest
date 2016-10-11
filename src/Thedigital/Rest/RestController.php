@@ -97,7 +97,7 @@ abstract class RestController
         $this->params           = $this->request->params;
 
 
-        $this->rest->setMimeContentType('application/json');
+        // $this->rest->setMimeContentType('application/json');
 
 
             if (in_array(strtolower($this->request->method->get()), $this->rest->getVerbs())) {
@@ -155,26 +155,27 @@ abstract class RestController
      * @return null
      *
      */
-    final protected function sendBack(array $content, $status_code = 200)
+    final protected function sendBack(array $content, $status_code = 200, $content_type = 'application/json')
     {
         $this->response->status->setCode($status_code);
+        $this->rest->setMimeContentType($content_type);
         $this->response->content->setType($this->rest->getMimeContentType());
 
-        switch ($this->rest->getMimeContentType()){
-            case 'application/json':
-                // JSON format
-                $content = json_encode($content);
-                $this->response->headers->set('Content-Length', strlen($content));
-                $this->response->content->set($content);
-                break;
-            default:
-                // default case
-                $this->response->content->set(
-                    'Unknown format'
-                );
-                break;
+
+        if ($content_type == 'application/json') {
+            // JSON format
+            $content = json_encode($content);
+            $this->response->headers->set('Content-Length', strlen($content));
+            $this->response->content->set($content);
+        } elseif ($content_type == 'application/pdf' || preg_match('image/', $content_type)) {
+            $this->response->headers->set('Content-Length', $content['data']['size']);
+            $this->response->content->set($content['data']['file']);
+        } else {
+            // default case
+            $this->response->content->set(
+                'Unknown format'
+            );
         }
-        //echo $this->response->content->get(); exit();
     }
 
     /**
