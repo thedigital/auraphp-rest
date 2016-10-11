@@ -21,6 +21,12 @@ class Rest
      */
     protected $available_formats = array(
         'application/json',
+        'image/jpeg',
+        'image/jpg',
+        'image/gif',
+        'image/bmp',
+        'image/png',
+        'application/pdf',
     );
 
     /**
