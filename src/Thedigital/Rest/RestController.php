@@ -307,9 +307,12 @@ abstract class RestController
                     $this->response->headers->set('x-FLI-authorized', '0');
                 } else {
                     if (isset($keys[$public_key])) {
-                        //on a trouvé le script appelant
-                        // $url = $this->request->url->get();
-                        $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //nouvelle version de calcul de l'url
+                        // recuperation de l'url appelee
+                        $url = str_replace(
+                            $this->request->url->get(PHP_URL_HOST) . ':' . $this->request->url->get(PHP_URL_PORT),
+                            $this->request->url->get(PHP_URL_HOST),
+                            $this->request->url->get()
+                        );
 
                         //on reconstruit le hmac
                         $string = strtoupper($this->rest->getVerb())."\n"
@@ -372,7 +375,12 @@ abstract class RestController
         } else {
             $this->response->headers->set('x-FLI-authorized', '0');
             if ($public_key && $hmac && $this->isValidTimeStamp($date) && isset($keys[$public_key]) && isset($keys[$public_key]['private_key'])) {
-                $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //nouvelle version de calcul de l'url
+                // recuperation de l'url appelee
+                $url = str_replace(
+                    $this->request->url->get(PHP_URL_HOST) . ':' . $this->request->url->get(PHP_URL_PORT),
+                    $this->request->url->get(PHP_URL_HOST),
+                    $this->request->url->get()
+                );
                 $string = strtoupper($this->rest->getVerb())."\n"
                             .$url."\n"
                             .$date."\n"
