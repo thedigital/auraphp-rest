@@ -155,7 +155,7 @@ abstract class RestController
      * @return null
      *
      */
-    final protected function sendBack(array $content, $status_code = 200, $content_type = 'application/json')
+    final protected function sendBack($content, $status_code = 200, $content_type = 'application/json')
     {
         $this->response->status->setCode($status_code);
         $this->rest->setMimeContentType($content_type);
